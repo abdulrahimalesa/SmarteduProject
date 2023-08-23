@@ -53,7 +53,8 @@ exports.loginUser = async (req, res) => {
     const parolaEslesme = await bcrypt.compare(password, user.password);
 
     if (parolaEslesme) {
-      res.status(200).json({ mesaj: 'Giriş yapıldı' });
+      req.session.userID = user._id;
+      res.status(200).redirect('/');
     } else {
       res.status(401).json({ mesaj: 'Yanlış şifre' });
     }
