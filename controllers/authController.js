@@ -54,7 +54,7 @@ exports.loginUser = async (req, res) => {
 
     if (parolaEslesme) {
       req.session.userID = user._id;
-      res.status(200).redirect('/');
+      res.status(200).redirect('/users/dashboard');
     } else {
       res.status(401).json({ mesaj: 'Yanlış şifre' });
     }
@@ -73,3 +73,11 @@ exports.logoutUser = (req, res) =>{
     res.redirect('/')
   })
 }
+
+exports.getDashboardPage =  async(req, res) => {
+  const user = await User.findOne({_id: req.session.userID});
+  res.status(200).render('dashboard',{
+      page_name: 'dashboard',
+      user
+  });
+};
