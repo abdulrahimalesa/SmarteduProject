@@ -1,14 +1,17 @@
 const Cours = require('../models/Course');
 const Category = require('../models/Category');
-const { query } = require('express');
+
 
 exports.createCourse = async (req, res) => {
   try {
-    const course = await Cours.create(req.body);
-    res.status(201).json({
-      status: 'success',
-      course,
+    const course = await Cours.create({
+      name: req.body.name,
+      description: req.body.name,
+      category: req.body.category,
+      user: req.session.userID
     });
+    
+    res.status(201).redirect('/courses')
   } catch (error) {
     // Add the 'error' parameter here
     res.status(400).json({
@@ -31,7 +34,7 @@ exports.getAllCourses = async (req, res) => {
       filter = {category:category._id}
     }
 
-    const courses = await Cours.find(filter);
+    const courses = await Cours.find(filter).sort('-createAt');
     const categories = await Category.find();
 
     res.status(200).render('courses', {
@@ -50,7 +53,7 @@ exports.getAllCourses = async (req, res) => {
 
 exports.getCourse = async (req, res) => {
   try {
-    const course = await Cours.findOne({ slug: req.params.slug });
+    const course = await Cours.findOne({ slug: req.params.slug }).populate('user');
 
     res.status(200).render('course', {
       course,

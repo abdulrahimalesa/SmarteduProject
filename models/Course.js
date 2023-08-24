@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 const Schema = mongoose.Schema;
 
+
+
+
 const CourseSchema = new Schema({
   name: {
     type: String,
@@ -24,8 +27,15 @@ const CourseSchema = new Schema({
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category'
-  }
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  
 });
+
+
 
 CourseSchema.pre('validate', function(next){ // veritabandeki  document olusturmadan once yapicak oun
   this.slug = slugify(this.name, {
