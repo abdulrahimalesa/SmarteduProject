@@ -20,7 +20,11 @@ const UserSchema = new Schema({
     type: String,
     enum:["student", "teacher", "admin"],
     default:'students'
-  }
+  },
+  courses:[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'course'
+  }]
 
 });
 
