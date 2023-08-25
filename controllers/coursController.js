@@ -26,6 +26,7 @@ exports.getAllCourses = async (req, res) => {
   try {
 
     const categorySlug = req.query.categories;
+    const query = req.query.search;
 
     const category  = await Category.findOne({slug:categorySlug});
 
@@ -34,8 +35,21 @@ exports.getAllCourses = async (req, res) => {
     if(categorySlug){
       filter = {category:category._id}
     }
+    if (query) {
+      filter = {name:query}
+    }
+    if (!query && ! categorySlug) {
+      filter.name = "",
+      filter.category = null
+    }
 
-    const courses = await Cours.find(filter).sort('-createAt');
+    const courses = await Cours.find({
+      $or:[
+        {name: {$regex: '.*' + filter.name + '.*', $options: 'i'}},
+        {category: filter.category}
+        
+      ]
+    }).sort('-createAt').populate('user');
     const categories = await Category.find();
 
     res.status(200).render('courses', {
@@ -56,11 +70,12 @@ exports.getCourse = async (req, res) => {
   try {
     const user = await User.findById(req.session.userID);
     const course = await Cours.findOne({ slug: req.params.slug }).populate('user');
-
+    const categories  = await Category.find();
     res.status(200).render('course', {
       course,
       page_name: 'courses',
       user,
+      categories,
     });
   } catch (error) {
     // Add the 'error' parameter here
