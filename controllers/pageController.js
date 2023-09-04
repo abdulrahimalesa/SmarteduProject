@@ -32,6 +32,11 @@ exports.getAboutPage =  (req, res) => {
   };
 
   exports.sendEmail =  async (req, res) => {
+
+    try {
+      
+    
+
     const outputMessage = `
     
     <h1>Mail Details </h1>
@@ -69,7 +74,15 @@ exports.getAboutPage =  (req, res) => {
       console.log("Message sent: %s", info.messageId);
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
-    res.status(200).redirect('contact')
+      req.flash("success", "We Reeived your message sucesflly");
+
+
+    res.status(200).redirect('contact');
+
+  } catch (err) {
+    req.flash("error", `Something happened!`);
+    res.status(200).redirect('contact');
+  }
 
   };
   
