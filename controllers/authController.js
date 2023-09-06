@@ -93,10 +93,28 @@ exports.getDashboardPage =  async(req, res) => {
   const user = await User.findOne({_id:req.session.userID}).populate('courses');
   const categories = await Category.find();
   const courses = await Cours.find({user: req.session.userID});
+  const users = await User.find();
   res.status(200).render('dashboard',{
       page_name: 'dashboard',
       user,
       categories,
-      courses
+      courses,
+      users
   });
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+
+    await User.findByIdAndRemove(req.params.id);
+    await Cours.deleteMany({user:req.params.id});
+
+    res.status(200).redirect('/users/dashboard');
+  } catch (error) {
+    // Add the 'error' parameter here
+    res.status(400).json({
+      status: 'fail',
+      error, // Now 'error' is defined and contains the actual error object
+    });
+  }
 };

@@ -28,12 +28,14 @@ global.userIN = null;
 app.use(express.static("public"));
 app.use(express.json()) // for parsing application/json body den gelen veri yakalamak icin olmazi gerekiyo
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 app.use(session({
   secret: 'my_keyboard_cat',
   resave: false,
   saveUninitialized: true,
   store: MongoStore.create({ mongoUrl: 'mongodb://localhost/smartedu-db' })
-}))
+}));
+
 app.use(flash());
 app.use((req, res, next)=> {
   res.locals.flashMessages = req.flash();
