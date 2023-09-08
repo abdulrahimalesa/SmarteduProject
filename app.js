@@ -14,8 +14,9 @@ const app = express();
 // Connect DB
 mongoose.connect('mongodb+srv://abdulrahimalesa:9CxjQkyHYNryn5so@cluster0.eoovqsb.mongodb.net/smart-db?retryWrites=true&w=majority')
 .then(()=> {
-  console.log('DB Connercted successfuly');
+  console.log('DB Connercted successfuly ');
 })
+ 
 
 
 //Template Engine
